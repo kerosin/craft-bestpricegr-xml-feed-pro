@@ -1,0 +1,225 @@
+{# @var craft \craft\web\twig\variables\CraftVariable #}
+{#
+/**
+ * @author    kerosin
+ * @copyright Copyright (c) 2021 kerosin
+ * @link      https://github.com/kerosin
+ * @package   BestpricegrXmlFeedPro
+ * @since     1.0.0
+ */
+#}
+
+{% import 'bestpricegr-xml-feed-pro/_macros/xml' as xml %}
+
+{% set isCommerceInstalled = craft.app.plugins.isPluginInstalled('commerce') %}
+{% set stock = stock is defined ? stock : craft.bestpricegrXmlFeedPro.elementStockFieldValue(element) %}
+
+{% if
+    settings.includeOutOfStockElements or
+    not craft.bestpricegrXmlFeedPro.isElementOutOfStock(stock)
+%}
+    <product>
+
+        {# productId #}
+        {{ xml.element({
+            tag: 'productId',
+            element: element,
+            field: settings.productIdField,
+            suffix: (color is defined and color is not empty and settings.appendColorToId ? color|kebab|lower),
+            suffixSeparator: '-'
+        }) }}
+
+        {# title #}
+        {{ xml.element({
+            tag: 'title',
+            element: element,
+            field: settings.titleField,
+            suffix: (color is defined and color is not empty and settings.appendColorToTitle ? color)
+        }) }}
+
+        {# productURL #}
+        {{ xml.element({
+            tag: 'productURL',
+            value: (color is defined and color is not empty and settings.appendColorToUrl
+                ? url(element.url, {color: color|kebab|lower})
+                : element.url)
+        }) }}
+
+        {# image #}
+        {{ xml.element({
+            tag: 'image',
+            element: element,
+            field: settings.imageField,
+            allowEmpty: true
+        }) }}
+
+        {# additional_image #}
+        {{ xml.element({
+            tag: 'additional_image',
+            element: element,
+            field: settings.additionalImageField,
+            multiple: true
+        }) }}
+
+        {# price #}
+        {{ xml.element({
+            tag: 'price',
+            value: (price is defined ? price : false),
+            element: element,
+            field: settings.priceField,
+            number: true,
+            format: true,
+            thousandSep: ',',
+            multiplier: settings.taxRate,
+            currency: settings.currency
+        }) }}
+
+        {# category_path #}
+        {{ xml.element({
+            tag: 'category_path',
+            element: element,
+            field: settings.categoryPathField,
+            separator: ' -> ',
+            raw: true
+        }) }}
+
+        {# category_id #}
+        {{ xml.element({
+            tag: 'category_id',
+            element: element,
+            field: settings.categoryIdField
+        }) }}
+
+        {# availability #}
+        {% if craft.bestpricegrXmlFeedPro.isUseStock(settings.availabilityField) %}
+            {% if settings.stockField is not empty %}
+                {% if craft.bestpricegrXmlFeedPro.isElementInStock(stock) %}
+                    {% set availabilityValue = settings.availabilityInStockValue %}
+                {% elseif craft.bestpricegrXmlFeedPro.isElementOutOfStock(stock) %}
+                    {% set availabilityValue = settings.availabilityOutOfStockValue %}
+                {% else %}
+                    {% set availabilityValue = settings.availabilityPreOrderValue %}
+                {% endif %}
+
+                {{ xml.element({
+                    tag: 'availability',
+                    value: availabilityValue
+                }) }}
+            {% endif %}
+        {% else %}
+            {{ xml.element({
+                tag: 'availability',
+                value: (availability is defined ? availability : false),
+                element: element,
+                field: settings.availabilityField,
+                customValue: settings.availabilityCustomValue
+            }) }}
+        {% endif %}
+
+        {# stock #}
+        {% if settings.stockField is not empty %}
+            {{ xml.element({
+                tag: 'stock',
+                value: stock,
+                allowEmpty: true
+            }) }}
+        {% endif %}
+
+        {# brand #}
+        {{ xml.element({
+            tag: 'brand',
+            element: element,
+            field: settings.brandField,
+            customValue: settings.brandCustomValue
+        }) }}
+
+        {# MPN #}
+        {{ xml.element({
+            tag: 'MPN',
+            value: (mpn is defined ? mpn : false),
+            element: element,
+            field: settings.mpnField
+        }) }}
+
+        {# ISBN #}
+        {{ xml.element({
+            tag: 'ISBN',
+            value: (isbn is defined ? isbn : false),
+            element: element,
+            field: settings.isbnField
+        }) }}
+
+        {# size #}
+        {{ xml.element({
+            tag: 'size',
+            value: (sizes is defined ? sizes : false),
+            element: element,
+            field: settings.sizeField
+        }) }}
+
+        {# color #}
+        {{ xml.element({
+            tag: 'color',
+            value: (color is defined ? color : false),
+            element: element,
+            field: settings.colorField
+        }) }}
+
+        {# warranty_provider #}
+        {{ xml.element({
+            tag: 'warranty_provider',
+            element: element,
+            field: settings.warrantyProviderField,
+            customValue: settings.warrantyProviderCustomValue
+        }) }}
+
+        {# warranty_duration #}
+        {{ xml.element({
+            tag: 'warranty_duration',
+            element: element,
+            field: settings.warrantyDurationField,
+            customValue: settings.warrantyDurationCustomValue
+        }) }}
+
+        {# bundle #}
+        {{ xml.element({
+            tag: 'bundle',
+            element: element,
+            field: settings.bundleField,
+            separator: ', '
+        }) }}
+
+        {# weight #}
+        {% if isCommerceInstalled and craft.bestpricegrXmlFeedPro.isUseWeightUnit(settings.weightUnitField) %}
+            {% set weightUnit = craft.commerce.settings.weightUnits %}
+        {% else %}
+            {% set weightUnit = craft.bestpricegrXmlFeedPro.elementFieldValue(
+                element,
+                settings.weightUnitField,
+                settings.weightUnitCustomValue
+            ) %}
+        {% endif %}
+
+        {{ xml.element({
+            tag: 'weight',
+            value: (weight is defined ? weight : false),
+            element: element,
+            field: settings.weightField,
+            suffix: weightUnit,
+            suffixSeparator: '',
+            number: true
+        }) }}
+
+        {# shipping #}
+        {{ xml.element({
+            tag: 'shipping',
+            element: element,
+            field: settings.shippingField,
+            customValue: settings.shippingCustomValue,
+            number: true,
+            format: true,
+            currency: settings.currency
+        }) }}
+
+    </product>
+{% endif %}

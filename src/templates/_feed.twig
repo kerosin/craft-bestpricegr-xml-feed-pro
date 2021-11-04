@@ -1,0 +1,28 @@
+{# @var craft \craft\web\twig\variables\CraftVariable #}
+{#
+/**
+ * @author    kerosin
+ * @copyright Copyright (c) 2021 kerosin
+ * @link      https://github.com/kerosin
+ * @package   BestpricegrXmlFeedPro
+ * @since     1.0.0
+ */
+#}
+{% spaceless %}
+    <?xml version="1.0" encoding="UTF-8"?>
+    <store>
+        <date>{{ 'now'|date('Y-m-d H:i') }}</date>
+        <products>
+            {% for element in elements %}
+                {% set colors = craft.bestpricegrXmlFeedPro.elementColors(element) %}
+                {% if colors|length %}
+                    {% for color, data in colors %}
+                        {% include 'bestpricegr-xml-feed-pro/_includes/product' with data %}
+                    {% endfor %}
+                {% else %}
+                    {% include 'bestpricegr-xml-feed-pro/_includes/product' %}
+                {% endif %}
+            {% endfor %}
+        </products>
+    </store>
+{% endspaceless %}
