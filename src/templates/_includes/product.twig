@@ -221,5 +221,29 @@
             currency: settings.currency
         }) }}
 
+        {# features #}
+        {% if settings.features is not empty and settings.features|length %}
+            <features>
+                <table>
+                    {% for feature in settings.features %}
+                        {% if feature.name|trim is not empty and feature.field is not empty %}
+                            <tr>
+                                {{ xml.element({
+                                    tag: 'td',
+                                    value: feature.name
+                                }) }}
+                                {{ xml.element({
+                                    tag: 'td',
+                                    element: element,
+                                    field: feature.field,
+                                    allowEmpty: true
+                                }) }}
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </table>
+            </features>
+        {% endif %}
+
     </product>
 {% endif %}

@@ -306,6 +306,13 @@ class Settings extends Model
      */
     public $shippingCustomValue;
 
+    /**
+     * Features.
+     *
+     * @var array
+     */
+    public $features;
+
     // Public Methods
     // =========================================================================
 

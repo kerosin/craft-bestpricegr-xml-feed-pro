@@ -398,3 +398,22 @@
     options: customValueOptions|merge(fieldOptions),
     settings: settings
 }) }}
+
+{{ forms.editableTableField({
+    label: 'Features'|t('bestpricegr-xml-feed-pro'),
+    id: 'features',
+    name: 'features',
+    cols: {
+        name: {
+            type: 'singleline',
+            heading: 'Name'|t('bestpricegr-xml-feed-pro'),
+        },
+        field: {
+            type: 'select',
+            heading: 'Field'|t('bestpricegr-xml-feed-pro'),
+            options: fieldOptions
+        }
+    },
+    rows: settings.features,
+    errors: settings.getErrors('features')
+}) }}
