@@ -11,6 +11,7 @@ namespace kerosin\bestpricegrxmlfeedpro;
 use kerosin\bestpricegrxmlfeedpro\services\BestpricegrXmlFeedProService;
 use kerosin\bestpricegrxmlfeedpro\variables\BestpricegrXmlFeedProVariable;
 use kerosin\bestpricegrxmlfeedpro\models\Settings;
+use kerosin\bestpricegrxmlfeedpro\web\twig\Extension;
 
 use Craft;
 use craft\base\Plugin;
@@ -77,8 +78,10 @@ class BestpricegrXmlFeedPro extends Plugin
     public function init()
     {
         parent::init();
+
         self::$plugin = $this;
 
+        $this->registerTwigExtensions();
         $this->registerRoutes();
         $this->registerVariables();
     }
@@ -109,6 +112,16 @@ class BestpricegrXmlFeedPro extends Plugin
                 'settings' => $this->getSettings(),
             ]
         );
+    }
+
+    /**
+     * Registers twig extensions.
+     *
+     * @return void
+     */
+    protected function registerTwigExtensions(): void
+    {
+        Craft::$app->view->registerTwigExtension(new Extension);
     }
 
     /**
