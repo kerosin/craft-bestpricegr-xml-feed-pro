@@ -25,6 +25,16 @@ class BestpricegrXmlFeedProVariable
     // =========================================================================
 
     /**
+     * @param Element[] $elements
+     * @return void
+     * @throws Exception
+     */
+    public function generateFeed(array $elements): void
+    {
+        BestpricegrXmlFeedPro::$plugin->bestpricegrXmlFeedProService->generateFeed($elements);
+    }
+
+    /**
      * @param Element $element
      * @param string|null $field
      * @param mixed $customValue
@@ -121,15 +131,5 @@ class BestpricegrXmlFeedProVariable
     public function isElementPreOrder(?string $value): bool
     {
         return BestpricegrXmlFeedPro::$plugin->bestpricegrXmlFeedProService->isElementPreOrder($value);
-    }
-
-    /**
-     * @param Element[] $elements
-     * @return void
-     * @throws Exception
-     */
-    public function generateFeed(array $elements): void
-    {
-        BestpricegrXmlFeedPro::$plugin->bestpricegrXmlFeedProService->generateFeed($elements);
     }
 }
