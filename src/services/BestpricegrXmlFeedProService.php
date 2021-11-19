@@ -154,7 +154,6 @@ class BestpricegrXmlFeedProService extends Component
 
         if (
             !isset($object->{$field}) &&
-            Craft::$app->getPlugins()->isPluginInstalled('commerce') &&
             $element instanceof Product &&
             isset($element->getDefaultVariant()->{$field})
         ) {
@@ -287,7 +286,6 @@ class BestpricegrXmlFeedProService extends Component
         }
 
         if (
-            Craft::$app->getPlugins()->isPluginInstalled('commerce') &&
             $element instanceof Product &&
             $element->getType()->hasVariants && (
                 $this->hasField($element->getDefaultVariant(), 'colorField') ||
