@@ -39,7 +39,7 @@
     {% endif %}
 
     {% if tag is not empty and (value is not empty or allowEmpty) %}
-        {% set values = (value is iterable ? value : [value]) %}
+        {% set values = value is iterable ? value : [value] %}
 
         {% if values is not empty %}
             {% set tmp = values %}
