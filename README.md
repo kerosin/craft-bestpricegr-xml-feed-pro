@@ -1,12 +1,12 @@
 # BestPrice.gr Xml Feed Pro plugin for Craft CMS 3.x
 
+![Plugin Icon](resources/img/plugin-icon.svg)
+
 With this plugin you can create an XML feed for [BestPrice.gr](https://www.bestprice.gr/).
 
 BestPrice.gr is a price comparison website that enables its users to filter through a variety of more than 9.7 million products in more than 2.1 thousand shops. BestPrice visitors can compare products and prices, bookmark their favorite products, check their price history, receive live notifications and find stores near them through an intuitive web interface.
 
 By providing an XML file with your store's products, you can list them in this platform.
-
-![Plugin Icon](resources/img/plugin-icon.svg)
 
 ## License
 
