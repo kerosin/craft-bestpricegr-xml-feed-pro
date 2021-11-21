@@ -1,5 +1,9 @@
 # BestPrice.gr Xml Feed Pro Changelog
 
+## 1.1.1 - 2021-11-22
+### Added
+- Added code improvements
+
 ## 1.1.0 - 2021-11-19
 ### Added
 - Added "features"
