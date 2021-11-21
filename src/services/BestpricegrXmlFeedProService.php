@@ -247,13 +247,13 @@ class BestpricegrXmlFeedProService extends Component
 
     /**
      * @param Element $element
-     * @return string|null
+     * @return mixed
      * @throws Exception
      */
-    public function getElementStockFieldValue(Element $element): ?string
+    public function getElementStockFieldValue(Element $element)
     {
-        $result = '';
         $settings = BestpricegrXmlFeedPro::$plugin->getSettings();
+        $result = $settings::STOCK_PRE_ORDER;
 
         if (
             $this->isUseStockField($settings->stockField) &&
@@ -265,7 +265,11 @@ class BestpricegrXmlFeedProService extends Component
                     : $settings::STOCK_OUT_OF_STOCK;
             }
         } elseif ($settings->stockField != null) {
-            $result = $this->getElementFieldValue($element, $settings->stockField, $settings->stockCustomValue);
+            $result = $this->getElementFieldValue(
+                $element,
+                $settings->stockField,
+                $settings->stockCustomValue
+            ) ?: $settings::STOCK_PRE_ORDER;
         }
 
         return $result;
