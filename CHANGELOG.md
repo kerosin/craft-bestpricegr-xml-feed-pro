@@ -1,5 +1,9 @@
 # BestPrice.gr Xml Feed Pro Changelog
 
+## 1.1.2 - 2021-11-25
+### Changed
+- Updated options for Currency setting
+
 ## 1.1.1 - 2021-11-22
 ### Added
 - Added code improvements
