@@ -48,10 +48,7 @@ class FeedController extends Controller
         $response->format = Response::FORMAT_RAW;
         $response->getHeaders()->set('Content-Type', 'application/xml; charset=UTF-8');
 
-        /** @var BestpricegrXmlFeedProService $bestpricegrXmlFeedProService */
-        $bestpricegrXmlFeedProService = BestpricegrXmlFeedPro::$plugin->bestpricegrXmlFeedProService;
-
-        return $bestpricegrXmlFeedProService->getEntriesFeedXml();
+        return $this->getService()->getEntriesFeedXml();
     }
 
     /**
@@ -64,9 +61,18 @@ class FeedController extends Controller
         $response->format = Response::FORMAT_RAW;
         $response->getHeaders()->set('Content-Type', 'application/xml; charset=UTF-8');
 
-        /** @var BestpricegrXmlFeedProService $bestpricegrXmlFeedProService */
-        $bestpricegrXmlFeedProService = BestpricegrXmlFeedPro::$plugin->bestpricegrXmlFeedProService;
+        return $this->getService()->getProductsFeedXml();
+    }
 
-        return $bestpricegrXmlFeedProService->getProductsFeedXml();
+    // Protected Methods
+    // =========================================================================
+
+    /**
+     * @return BestpricegrXmlFeedProService
+     * @since 1.2.0
+     */
+    protected function getService(): BestpricegrXmlFeedProService
+    {
+        return BestpricegrXmlFeedPro::$plugin->bestpricegrXmlFeedProService;
     }
 }

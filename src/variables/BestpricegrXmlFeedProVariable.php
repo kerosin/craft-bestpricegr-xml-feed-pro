@@ -9,6 +9,7 @@
 namespace kerosin\bestpricegrxmlfeedpro\variables;
 
 use kerosin\bestpricegrxmlfeedpro\BestpricegrXmlFeedPro;
+use kerosin\bestpricegrxmlfeedpro\services\BestpricegrXmlFeedProService;
 
 use craft\base\Element;
 
@@ -31,7 +32,7 @@ class BestpricegrXmlFeedProVariable
      */
     public function generateFeed(array $elements): void
     {
-        BestpricegrXmlFeedPro::$plugin->bestpricegrXmlFeedProService->generateFeed($elements);
+        $this->getService()->generateFeed($elements);
     }
 
     /**
@@ -43,9 +44,7 @@ class BestpricegrXmlFeedProVariable
      */
     public function elementFieldValue(Element $element, ?string $field, $customValue = null)
     {
-        return BestpricegrXmlFeedPro::$plugin
-            ->bestpricegrXmlFeedProService
-            ->getElementFieldValue($element, $field, $customValue);
+        return $this->getService()->getElementFieldValue($element, $field, $customValue);
     }
 
     /**
@@ -55,9 +54,7 @@ class BestpricegrXmlFeedProVariable
      */
     public function elementStockFieldValue(Element $element)
     {
-        return BestpricegrXmlFeedPro::$plugin
-            ->bestpricegrXmlFeedProService
-            ->getElementStockFieldValue($element);
+        return $this->getService()->getElementStockFieldValue($element);
     }
 
     /**
@@ -67,7 +64,7 @@ class BestpricegrXmlFeedProVariable
      */
     public function elementColors(Element $element): array
     {
-        return BestpricegrXmlFeedPro::$plugin->bestpricegrXmlFeedProService->getElementColors($element);
+        return $this->getService()->getElementColors($element);
     }
 
     /**
@@ -76,7 +73,7 @@ class BestpricegrXmlFeedProVariable
      */
     public function isCustomValue(?string $value): bool
     {
-        return BestpricegrXmlFeedPro::$plugin->bestpricegrXmlFeedProService->isCustomValue($value);
+        return $this->getService()->isCustomValue($value);
     }
 
     /**
@@ -85,7 +82,7 @@ class BestpricegrXmlFeedProVariable
      */
     public function isUseWeightUnit(?string $value): bool
     {
-        return BestpricegrXmlFeedPro::$plugin->bestpricegrXmlFeedProService->isUseWeightUnit($value);
+        return $this->getService()->isUseWeightUnit($value);
     }
 
     /**
@@ -94,7 +91,7 @@ class BestpricegrXmlFeedProVariable
      */
     public function isUseStock(?string $value): bool
     {
-        return BestpricegrXmlFeedPro::$plugin->bestpricegrXmlFeedProService->isUseStock($value);
+        return $this->getService()->isUseStock($value);
     }
 
     /**
@@ -103,7 +100,7 @@ class BestpricegrXmlFeedProVariable
      */
     public function isUseStockField(?string $value): bool
     {
-        return BestpricegrXmlFeedPro::$plugin->bestpricegrXmlFeedProService->isUseStockField($value);
+        return $this->getService()->isUseStockField($value);
     }
 
     /**
@@ -112,7 +109,7 @@ class BestpricegrXmlFeedProVariable
      */
     public function isElementInStock(?string $value): bool
     {
-        return BestpricegrXmlFeedPro::$plugin->bestpricegrXmlFeedProService->isElementInStock($value);
+        return $this->getService()->isElementInStock($value);
     }
 
     /**
@@ -121,7 +118,7 @@ class BestpricegrXmlFeedProVariable
      */
     public function isElementOutOfStock(?string $value): bool
     {
-        return BestpricegrXmlFeedPro::$plugin->bestpricegrXmlFeedProService->isElementOutOfStock($value);
+        return $this->getService()->isElementOutOfStock($value);
     }
 
     /**
@@ -130,6 +127,18 @@ class BestpricegrXmlFeedProVariable
      */
     public function isElementPreOrder(?string $value): bool
     {
-        return BestpricegrXmlFeedPro::$plugin->bestpricegrXmlFeedProService->isElementPreOrder($value);
+        return $this->getService()->isElementPreOrder($value);
+    }
+
+    // Protected Methods
+    // =========================================================================
+
+    /**
+     * @return BestpricegrXmlFeedProService
+     * @since 1.2.0
+     */
+    protected function getService(): BestpricegrXmlFeedProService
+    {
+        return BestpricegrXmlFeedPro::$plugin->bestpricegrXmlFeedProService;
     }
 }
