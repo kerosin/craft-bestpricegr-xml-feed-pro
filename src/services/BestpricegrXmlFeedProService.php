@@ -9,6 +9,7 @@
 namespace kerosin\bestpricegrxmlfeedpro\services;
 
 use kerosin\bestpricegrxmlfeedpro\BestpricegrXmlFeedPro;
+use kerosin\bestpricegrxmlfeedpro\models\Settings;
 
 use Craft;
 use craft\base\Component;
@@ -86,13 +87,11 @@ class BestpricegrXmlFeedProService extends Component
      */
     public function getFeedXml(array $elements): string
     {
-        $settings = BestpricegrXmlFeedPro::$plugin->getSettings();
-
         return Craft::$app->getView()->renderTemplate(
             'bestpricegr-xml-feed-pro/_feed',
             [
                 'elements' => $elements,
-                'settings' => $settings,
+                'settings' => $this->getSettings(),
             ],
             View::TEMPLATE_MODE_CP
         );
@@ -252,7 +251,7 @@ class BestpricegrXmlFeedProService extends Component
      */
     public function getElementStockFieldValue(Element $element)
     {
-        $settings = BestpricegrXmlFeedPro::$plugin->getSettings();
+        $settings = $this->getSettings();
         $result = $settings::STOCK_PRE_ORDER;
 
         if (
@@ -283,7 +282,7 @@ class BestpricegrXmlFeedProService extends Component
     public function getElementColors(Element $element): array
     {
         $result = [];
-        $settings = BestpricegrXmlFeedPro::$plugin->getSettings();
+        $settings = $this->getSettings();
 
         if ($settings->colorField == null) {
             return $result;
@@ -544,9 +543,7 @@ class BestpricegrXmlFeedProService extends Component
      */
     public function isCustomValue(?string $value): bool
     {
-        $settings = BestpricegrXmlFeedPro::$plugin->getSettings();
-
-        return $value == $settings::OPTION_CUSTOM_VALUE;
+        return $value == $this->getSettings()::OPTION_CUSTOM_VALUE;
     }
 
     /**
@@ -555,9 +552,7 @@ class BestpricegrXmlFeedProService extends Component
      */
     public function isUseWeightUnit(?string $value): bool
     {
-        $settings = BestpricegrXmlFeedPro::$plugin->getSettings();
-
-        return $value == $settings::OPTION_USE_WEIGHT_UNIT;
+        return $value == $this->getSettings()::OPTION_USE_WEIGHT_UNIT;
     }
 
     /**
@@ -566,9 +561,7 @@ class BestpricegrXmlFeedProService extends Component
      */
     public function isUseStock(?string $value): bool
     {
-        $settings = BestpricegrXmlFeedPro::$plugin->getSettings();
-
-        return $value == $settings::OPTION_USE_STOCK;
+        return $value == $this->getSettings()::OPTION_USE_STOCK;
     }
 
     /**
@@ -577,9 +570,7 @@ class BestpricegrXmlFeedProService extends Component
      */
     public function isUseStockField(?string $value): bool
     {
-        $settings = BestpricegrXmlFeedPro::$plugin->getSettings();
-
-        return $value == $settings::OPTION_USE_STOCK_FIELD;
+        return $value == $this->getSettings()::OPTION_USE_STOCK_FIELD;
     }
 
     /**
@@ -588,9 +579,7 @@ class BestpricegrXmlFeedProService extends Component
      */
     public function isElementInStock(?string $value): bool
     {
-        $settings = BestpricegrXmlFeedPro::$plugin->getSettings();
-
-        return $value == $settings::STOCK_IN_STOCK;
+        return $value == $this->getSettings()::STOCK_IN_STOCK;
     }
 
     /**
@@ -599,9 +588,7 @@ class BestpricegrXmlFeedProService extends Component
      */
     public function isElementOutOfStock(?string $value): bool
     {
-        $settings = BestpricegrXmlFeedPro::$plugin->getSettings();
-
-        return $value == $settings::STOCK_OUT_OF_STOCK;
+        return $value == $this->getSettings()::STOCK_OUT_OF_STOCK;
     }
 
     /**
@@ -620,7 +607,7 @@ class BestpricegrXmlFeedProService extends Component
      */
     public function hasField(Element $element, string $field): bool
     {
-        $settings = BestpricegrXmlFeedPro::$plugin->getSettings();
+        $settings = $this->getSettings();
 
         return $settings->{$field} != null && isset($element->{$settings->{$field}});
     }
@@ -630,7 +617,7 @@ class BestpricegrXmlFeedProService extends Component
      */
     public function isVariantPriceTypeDefault(): bool
     {
-        $settings = BestpricegrXmlFeedPro::$plugin->getSettings();
+        $settings = $this->getSettings();
 
         return $settings->variantPriceType == $settings::VARIANT_PRICE_TYPE_DEFAULT;
     }
@@ -641,8 +628,18 @@ class BestpricegrXmlFeedProService extends Component
      */
     public function isSkipOutOfStockVariants(string $stock = null): bool
     {
-        $settings = BestpricegrXmlFeedPro::$plugin->getSettings();
+        return !$this->getSettings()->includeOutOfStockVariants && $this->isElementOutOfStock($stock);
+    }
 
-        return !$settings->includeOutOfStockVariants && $this->isElementOutOfStock($stock);
+    // Protected Methods
+    // =========================================================================
+
+    /**
+     * @return Settings
+     * @since 1.2.0
+     */
+    protected function getSettings(): Settings
+    {
+        return BestpricegrXmlFeedPro::$plugin->getSettings();
     }
 }
