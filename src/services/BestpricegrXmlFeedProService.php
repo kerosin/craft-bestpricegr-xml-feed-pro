@@ -64,7 +64,7 @@ class BestpricegrXmlFeedProService extends Component
     {
         $result = [];
 
-        if (!Craft::$app->getPlugins()->isPluginInstalled('commerce')) {
+        if (!$this->isCommerceInstalled()) {
             return $result;
         }
 
@@ -256,7 +256,7 @@ class BestpricegrXmlFeedProService extends Component
 
         if (
             $this->isUseStockField($settings->stockField) &&
-            Craft::$app->getPlugins()->isPluginInstalled('commerce')
+            $this->isCommerceInstalled()
         ) {
             if ($element instanceof Product) {
                 $result = $element->getDefaultVariant()->hasStock()
@@ -629,6 +629,15 @@ class BestpricegrXmlFeedProService extends Component
     public function isSkipOutOfStockVariants(string $stock = null): bool
     {
         return !$this->getSettings()->includeOutOfStockVariants && $this->isElementOutOfStock($stock);
+    }
+
+    /**
+     * @return bool
+     * @since 1.2.0
+     */
+    public function isCommerceInstalled(): bool
+    {
+        return Craft::$app->getPlugins()->isPluginInstalled('commerce');
     }
 
     // Protected Methods
