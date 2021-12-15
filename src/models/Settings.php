@@ -518,7 +518,7 @@ class Settings extends Model
     /**
      * @return array
      */
-    public static function getVariantPriceTypeOptions(): array
+    public function getVariantPriceTypeOptions(): array
     {
         return [
             self::VARIANT_PRICE_TYPE_DEFAULT => Craft::t('bestpricegr-xml-feed-pro', 'Default Variant'),
