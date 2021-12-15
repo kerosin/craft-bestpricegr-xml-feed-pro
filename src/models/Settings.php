@@ -12,6 +12,7 @@ use Craft;
 use craft\base\Model;
 use craft\commerce\errors\CurrencyException;
 use craft\commerce\Plugin as CommercePlugin;
+use craft\helpers\ArrayHelper;
 
 /**
  * @author    kerosin
@@ -36,6 +37,31 @@ class Settings extends Model
     const STOCK_IN_STOCK = 'Y';
     const STOCK_OUT_OF_STOCK = 'N';
     const STOCK_PRE_ORDER = '';
+
+    /**
+     * @since 1.2.0
+     */
+    const FILTER_STATUS_LIVE = 'live';
+    /**
+     * @since 1.2.0
+     */
+    const FILTER_STATUS_PENDING = 'pending';
+    /**
+     * @since 1.2.0
+     */
+    const FILTER_STATUS_EXPIRED = 'expired';
+    /**
+     * @since 1.2.0
+     */
+    const FILTER_STATUS_ENABLED = 'enabled';
+    /**
+     * @since 1.2.0
+     */
+    const FILTER_STATUS_DISABLED = 'disabled';
+    /**
+     * @since 1.2.0
+     */
+    const FILTER_STATUS_ARCHIVED = 'archived';
 
     // Public Properties
     // =========================================================================
@@ -313,6 +339,62 @@ class Settings extends Model
      */
     public $features;
 
+    /**
+     * Entry status filter.
+     *
+     * @var array
+     * @since 1.2.0
+     */
+    public $entryStatusFilter = [self::FILTER_STATUS_LIVE];
+
+    /**
+     * Entry type filter.
+     *
+     * @var array
+     * @since 1.2.0
+     */
+    public $entryTypeFilter = [];
+
+    /**
+     * Entry category filter.
+     *
+     * @var array
+     * @since 1.2.0
+     */
+    public $entryCategoryFilter = [];
+
+    /**
+     * Product status filter.
+     *
+     * @var array
+     * @since 1.2.0
+     */
+    public $productStatusFilter = [self::FILTER_STATUS_LIVE];
+
+    /**
+     * Product type filter.
+     *
+     * @var array
+     * @since 1.2.0
+     */
+    public $productTypeFilter = [];
+
+    /**
+     * Product category filter.
+     *
+     * @var array
+     * @since 1.2.0
+     */
+    public $productCategoryFilter = [];
+
+    /**
+     * Product available for purchase filter.
+     *
+     * @var string
+     * @since 1.2.0
+     */
+    public $productAvailableForPurchaseFilter;
+
     // Public Methods
     // =========================================================================
 
@@ -447,6 +529,67 @@ class Settings extends Model
     }
 
     /**
+     * @return array
+     * @since 1.2.0
+     */
+    public function getStatusFilterOptions(): array
+    {
+        return [
+            self::FILTER_STATUS_LIVE => Craft::t('bestpricegr-xml-feed-pro', 'Live'),
+            self::FILTER_STATUS_PENDING => Craft::t('bestpricegr-xml-feed-pro', 'Pending'),
+            self::FILTER_STATUS_EXPIRED => Craft::t('bestpricegr-xml-feed-pro', 'Expired'),
+            self::FILTER_STATUS_ENABLED => Craft::t('bestpricegr-xml-feed-pro', 'Enabled'),
+            self::FILTER_STATUS_DISABLED => Craft::t('bestpricegr-xml-feed-pro', 'Disabled'),
+            self::FILTER_STATUS_ARCHIVED => Craft::t('bestpricegr-xml-feed-pro', 'Archived'),
+        ];
+    }
+
+    /**
+     * @return array
+     * @since 1.2.0
+     */
+    public function getEntryTypeFilterOptions(): array
+    {
+        $result = [];
+        $sections = Craft::$app->getSections()->getAllSections();
+
+        foreach ($sections as $section) {
+            foreach ($section->getEntryTypes() as $entryType) {
+                $result[] = [
+                    'value' => $entryType->id,
+                    'label' => Craft::t('site', $section->name) . ' - ' . Craft::t('site', $entryType->name),
+                ];
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * @return array
+     * @since 1.2.0
+     */
+    public function getProductTypeFilterOptions(): array
+    {
+        $result = [];
+
+        if (!Craft::$app->getPlugins()->isPluginInstalled('commerce')) {
+            return $result;
+        }
+
+        $productTypes = CommercePlugin::getInstance()->getProductTypes()->getAllProductTypes();
+
+        foreach ($productTypes as $productType) {
+            $result[] = [
+                'value' => $productType->id,
+                'label' => Craft::t('site', $productType->name),
+            ];
+        }
+
+        return $result;
+    }
+
+    /**
      * @inheritdoc
      */
     public function rules()
@@ -461,16 +604,21 @@ class Settings extends Model
             array_keys($this->getStandardFields()),
             array_keys($this->getCustomFields())
         );
+        $currencyOptions = array_keys($this->getCurrencyOptions());
+        $variantPriceTypeOptions = array_keys($this->getVariantPriceTypeOptions());
+        $statusFilterOptions = array_keys($this->getStatusFilterOptions());
+        $entryTypeFilterOptions = ArrayHelper::getColumn($this->getEntryTypeFilterOptions(), 'value');
+        $productTypeFilterOptions = ArrayHelper::getColumn($this->getProductTypeFilterOptions(), 'value');
 
         return [
             ['taxRate', 'number'],
-            ['currency', 'in', 'range' => array_keys($this->getCurrencyOptions())],
+            ['currency', 'in', 'range' => $currencyOptions],
             ['includeOutOfStockElements', 'boolean'],
             ['appendColorToId', 'boolean'],
             ['appendColorToTitle', 'boolean'],
             ['appendColorToUrl', 'boolean'],
             ['includeOutOfStockVariants', 'boolean'],
-            ['variantPriceType', 'in', 'range' => array_keys($this->getVariantPriceTypeOptions())],
+            ['variantPriceType', 'in', 'range' => $variantPriceTypeOptions],
             ['productIdField', 'in', 'range' => $fieldOptions],
             ['titleField', 'in', 'range' => $fieldOptions],
             ['imageField', 'in', 'range' => $fieldOptions],
@@ -491,6 +639,10 @@ class Settings extends Model
             ['weightField', 'in', 'range' => $fieldOptions],
             ['weightUnitField', 'in', 'range' => $fieldOptions],
             ['shippingField', 'in', 'range' => $fieldOptions],
+            ['entryStatusFilter', 'in', 'allowArray' => true, 'range' => $statusFilterOptions],
+            ['entryTypeFilter', 'in', 'allowArray' => true, 'range' => $entryTypeFilterOptions],
+            ['productStatusFilter', 'in', 'allowArray' => true, 'range' => $statusFilterOptions],
+            ['productTypeFilter', 'in', 'allowArray' => true, 'range' => $productTypeFilterOptions],
         ];
     }
 }
