@@ -378,7 +378,14 @@
                 field: {
                     type: 'select',
                     heading: 'Field'|t('bestpricegr-xml-feed-pro'),
-                    options: fieldOptions
+                    options: [{
+                        label: 'Custom Value'|t('bestpricegr-xml-feed-pro'),
+                        value: constant('OPTION_CUSTOM_VALUE', settings)
+                    }]|merge(fieldOptions)
+                },
+                customValue: {
+                    type: 'singleline',
+                    heading: 'Custom Value'|t('bestpricegr-xml-feed-pro')
                 }
             },
             rows: settings.features,
