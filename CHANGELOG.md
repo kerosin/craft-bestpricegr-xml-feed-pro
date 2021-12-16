@@ -1,5 +1,14 @@
 # BestPrice.gr Xml Feed Pro Changelog
 
+## 1.2.0 - 2021-12-16
+### Added
+- Added filters
+- Added ability to set custom values to features
+- Added code improvements
+
+### Changed
+- Updated plugin settings UI
+
 ## 1.1.3 - 2021-11-30
 ### Fixed
 - Fixed translation issue in the admin settings
