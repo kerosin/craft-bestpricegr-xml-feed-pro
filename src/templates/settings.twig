@@ -228,6 +228,8 @@
             errors: settings.getErrors('mpnField')
         }) }}
 
+        <hr>
+
         <h2>{{ 'Optional Fields'|t('bestpricegr-xml-feed-pro') }}</h2>
 
         {{ forms.selectField({
@@ -390,6 +392,35 @@
             },
             rows: settings.features,
             errors: settings.getErrors('features')
+        }) }}
+
+        <hr>
+
+        <h2>{{ 'Custom Tags'|t('bestpricegr-xml-feed-pro') }}</h2>
+
+        {{ forms.editableTableField({
+            id: 'customTags',
+            name: 'customTags',
+            cols: {
+                name: {
+                    type: 'singleline',
+                    heading: 'Name'|t('bestpricegr-xml-feed-pro')
+                },
+                field: {
+                    type: 'select',
+                    heading: 'Field'|t('bestpricegr-xml-feed-pro'),
+                    options: [{
+                        label: 'Custom Value'|t('bestpricegr-xml-feed-pro'),
+                        value: constant('OPTION_CUSTOM_VALUE', settings)
+                    }]|merge(fieldOptions)
+                },
+                customValue: {
+                    type: 'singleline',
+                    heading: 'Custom Value'|t('bestpricegr-xml-feed-pro')
+                }
+            },
+            rows: settings.customTags,
+            errors: settings.getErrors('customTags')
         }) }}
 
     </div>

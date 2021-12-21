@@ -340,6 +340,14 @@ class Settings extends Model
     public $features;
 
     /**
+     * Custom tags.
+     *
+     * @var array
+     * @since 1.3.0
+     */
+    public $customTags = [];
+
+    /**
      * Entry status filter.
      *
      * @var array
