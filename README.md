@@ -40,9 +40,29 @@ Open the Craft admin and go to Settings → Plugins → BestPrice.gr Xml Feed Pr
 
     http://example.com/bestpricegr-xml-feed-pro/feed/entries
     
+To save the output to a file add `save` query param to the url:
+
+    http://example.com/bestpricegr-xml-feed-pro/feed/entries?save
+    
+The file will be saved in the following path:
+
+    http://example.com/bestpricegr-xml-feed-pro/entries-SITE_HANDLE.xml
+    
+Replace `SITE_HANDLE` in the url with a real site handle.
+    
 ### Products feed url
 
     http://example.com/bestpricegr-xml-feed-pro/feed/products
+    
+To save the output to a file add `save` query param to the url:
+
+    http://example.com/bestpricegr-xml-feed-pro/feed/products?save
+    
+The file will be saved in the following path:
+
+    http://example.com/bestpricegr-xml-feed-pro/products-SITE_HANDLE.xml
+    
+Replace `SITE_HANDLE` in the url with a real site handle.
     
 ### Twig function
 
